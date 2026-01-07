@@ -2,11 +2,13 @@
 import { useEffect, useState } from "react";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 
 const client = generateClient<Schema>();
 
 function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  const { user, signOut } = useAuthenticator();
 
   useEffect(() => {
     // Subscribe to real-time updates
@@ -37,17 +39,28 @@ function App() {
   }
 
   return (
-    <main>
-      <h1>My todos</h1>
+    <main style={{ maxWidth: 640, margin: "24px auto", padding: "0 16px" }}>
+      <header style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <h1 style={{ margin: 0 }}>
+          {user?.signInDetails?.loginId
+            ? `${user.signInDetails.loginId}'s todos`
+            : "My todos"}
+        </h1>
+        <div style={{ marginLeft: "auto" }}>
+          <button onClick={signOut}>Sign out</button>
+        </div>
+      </header>
 
-      <button onClick={createTodo}>+ new</button>
+      <section style={{ marginTop: 16 }}>
+        <button onClick={createTodo}>+ new</button>
+      </section>
 
-      <ul>
+      <ul style={{ marginTop: 16 }}>
         {todos.map((todo) => (
           <li
             onClick={() => deleteTodo(todo.id)}
             key={todo.id}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", padding: "6px 0" }}
             title="Click to delete"
           >
             {todo.content}
@@ -55,7 +68,7 @@ function App() {
         ))}
       </ul>
 
-      <div>
+      <div style={{ marginTop: 24, color: "#555" }}>
         🥳 App successfully hosted. Try creating a new todo.
         <br />
         <a href="https://docs.amplify.aws/react/start/quickstart/">
