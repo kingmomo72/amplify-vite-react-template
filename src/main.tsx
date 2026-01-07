@@ -1,3 +1,4 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Authenticator } from '@aws-amplify/ui-react';
@@ -7,7 +8,6 @@ import outputs from '../amplify_outputs.json';
 import './index.css';
 import '@aws-amplify/ui-react/styles.css';
 
-// Configure Amplify with backend outputs
 Amplify.configure(outputs);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
